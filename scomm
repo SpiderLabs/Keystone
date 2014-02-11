@@ -1,0 +1,81 @@
+#!/bin/sh
+# scomm - sorted comm
+# Martin Murfitt
+# Copyright (C) 2014 Trustwave Holdings, Inc.
+# This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+# V 1.0
+USAGE="Usage: scomm <file1> <file2> [-123] [-u for unique]"
+TYPE=$(comm 2>&1)
+if [ "$TYPE" = "usage: comm [-123i] file1 file2" ] ; then
+  TYPE="BSD"
+else 
+  TYPE="GNU"
+fi 
+
+if [ $# = 0 ] ; then
+	echo $USAGE
+	exit 1
+fi
+
+if [ $1 = --help ]; then
+echo $USAGE
+echo "-123 are the same as for comm command."
+echo "-u (-unique) means do not consider duplicate lines."
+exit 1
+fi
+
+if [ $# = 1 ] ; then
+	echo "Second file missing."
+	echo $USAGE
+	exit 1
+fi
+
+if [ ! -e $1 ]; then
+	echo "Error: File $1 does not exist."
+	exit 1
+fi
+
+if [ ! -e $2 ]; then
+	echo "Error: File $2 does not exist."
+	exit 1
+fi
+
+if [ -d $1 ] || [ -d $2 ]; then
+	echo "Error: scomm does not work on directories."
+	exit 1
+fi
+
+if [ ! -r $1 ]; then
+	echo "Error: $1: Read permission denied."
+	exit 1
+fi
+
+if [ ! -r $2 ]; then
+	echo "Error: $2: Read permission denied."
+	exit 1
+fi
+
+if [ $# = 4 ]; then
+   sort $4 $1 > /tmp/$UID$$1
+   sort $4 $2 > /tmp/$UID$$2 
+elif [ $# = 3 ] && [ $3 = -u ]; then
+   sort $3 $1 > /tmp/$UID$$1
+   sort $3 $2 > /tmp/$UID$$2
+else
+   sort $1 > /tmp/$UID$$1
+   sort $2 > /tmp/$UID$$2
+fi
+if [ $# = 3 ] && [ $3 = -u ]; then
+comm /tmp/$UID$$1 /tmp/$UID$$2
+else
+ if [ $TYPE = BSD ] ; then
+  comm $3 /tmp/$UID$$1 /tmp/$UID$$2
+ else 
+  comm /tmp/$UID$$1 /tmp/$UID$$2 $3 
+ fi
+fi
+
+rm -f /tmp/$UID$$1
+rm -f /tmp/$UID$$2

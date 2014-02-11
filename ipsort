@@ -1,0 +1,66 @@
+#!/usr/bin/perl
+# ipsort - find, sort and print IP addresses
+# Martin Murfitt
+# Copyright (C) 2014 Trustwave Holdings, Inc.
+# This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+# You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+# V 1.0
+use Getopt::Long;
+Getopt::Long::Configure("bundling");
+my $usage="ipsort - simple little thing to sort by IP address, not number.
+Usage: Takes Standard in or a file or list of files. So ipsort <file1> <file2> or cat <file> | ipsort
+It uses regexes and looks for an IP address match on each line, ignoring the line if it doesn't find one
+
+Options:
+    -c or --commas   Separate the list by space-separated commas, rather than one IP per line.
+    -u or --unique   Uniquely sort the list as well, to avoid duplicate IPs.    
+    -s or --string   Use this string to separate the IPs. Eg. -s :
+    -m or --multiple Search for multiple IP addresses per line.
+    -h or --help     Display this usage message.
+
+Examples:
+   ipsort fileone.txt filetwo.txt filethree.txt
+   cat results.txt | ipsort -um > discoveredips.txt
+";
+$split="\n";
+GetOptions('c|commas' => sub {$commas=1;$split=", "}, 'u|unique' => sub {$unique=1}, 'h|help' => sub {print $usage;exit}, 's|string=s' => \$split, 'm|multiple' => sub {$multiple=1}) or exit;
+
+sub ip {
+	@oa=split /\./, $a;
+	@ob=split /\./, $b;
+
+	$oa[0] <=> $ob[0]
+		or
+	$oa[1] <=> $ob[1]
+		or
+	$oa[2] <=> $ob[2]
+		or
+	$oa[3] <=> $ob[3]
+}
+
+unless ($multiple) {
+    while (<>) {
+	/(\d{1,3}\.){3}\d{1,3}/ or next;
+	if ($unique) {
+	    next if ($done{$&});
+	    $done{$&}=1;
+	}
+	push @ips, $&;
+    }
+}
+else {
+    while (<>) {
+	while(/(\d{1,3}\.){3}\d{1,3}/) {
+	    $_=$`.$';
+	    if ($unique) {
+		next if ($done{$&});
+		$done{$&}=1;
+	    }
+	    push @ips,$&;
+	}
+    }
+}
+
+
+print join($split,sort ip @ips)."\n";
