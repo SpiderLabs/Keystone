@@ -15,11 +15,10 @@ Please note, each tool may be updated in the future if improvements are made to
 it. We suggest cloning the entire repository to ensure each is up to date.
 
 INDEX
-
-Part 1
-======
-ipsort		Perl script to identify IP addresses and print them out
-scomm		A wrapper around the UNIX utility "comm" to avoid sorting files
+-----
+### Part 1
+- ipsort	Perl script to identify IP addresses and print them out 
+- scomm		A wrapper around the UNIX utility "comm" to avoid sorting files
 
 # ipsort
 
@@ -40,15 +39,20 @@ USAGE
 ipsort <file> [file2...fileN] or cat <file> [file2...fileN] | ipsort
 
 Options:
-    -c or --commas   Separate the list by space-separated commas, rather than
+   -c or --commas   Separate the list by space-separated commas, rather than
     one IP per line.
-    -u or --unique   Uniquely sort the list as well, to avoid duplicate IPs.
-    -s or --string   Use this string to separate the IPs. Eg. -s :
-    -m or --multiple Search for multiple IP addresses per line.
-    -h or --help     Display this usage message.
+
+   -u or --unique   Uniquely sort the list as well, to avoid duplicate IPs.
+
+   -s or --string   Use this string to separate the IPs. Eg. -s :
+
+   -m or --multiple Search for multiple IP addresses per line.
+
+   -h or --help     Display this usage message.
 
 Examples:
    ipsort fileone.txt filetwo.txt filethree.txt
+
    cat results.txt | ipsort -um > discoveredips.txt
 
 # scomm
@@ -64,6 +68,7 @@ rather than a standalone program).
 REQUIREMENTS
 ============
 comm
+
 sort
 
 USAGE
@@ -74,11 +79,14 @@ The options -123 can be used in any combination and suppress the output of one
 of the three columns, which are:
 
 1 - Lines unique to file1
+
 2 - Lines unique to file2
+
 3 - Lines common to both files
 
 E.g.
 To show only lines unique to file1, do scomm file1 file2 -23
+
 To show only lines common to both files, do scomm file1 file2 -12
 
 The option -u may be passed, either after any -123 options or at the end of the
@@ -88,9 +96,10 @@ ignoring duplicate lines.
 COPYRIGHT
 =========
 
-ipsort - find, sort and print IP addresses
-scomm  - Sorted compare, a wrapper/replacement for comm
-Martin Murfitt
+- ipsort - find, sort and print IP addresses
+- scomm  - Sorted compare, a wrapper/replacement for comm
+
+Written by Martin Murfitt
 Copyright (C) 2014 Trustwave
  
 This program is free software: you can redistribute it and/or modify
@@ -105,8 +114,3 @@ GNU General Public License for more details.
  
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>
-
-
-
-
-
