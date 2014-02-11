@@ -1,4 +1,4 @@
-Keystone
+# Keystone
 Initial Commit in February 2014
 Martin Murfitt <mmurfitt@trustwave.com>
 http://www.trustwave.com
@@ -21,9 +21,7 @@ Part 1
 ipsort		Perl script to identify IP addresses and print them out
 scomm		A wrapper around the UNIX utility "comm" to avoid sorting files
 
-=+=+=+
-ipsort
-=+=+=+
+# ipsort
 
 INTRODUCTION
 ============
@@ -53,9 +51,8 @@ Examples:
    ipsort fileone.txt filetwo.txt filethree.txt
    cat results.txt | ipsort -um > discoveredips.txt
 
-=+=+=
-scomm
-=+=+=
+# scomm
+
 INTRODUCTION
 ============
 
